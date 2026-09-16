@@ -50,9 +50,9 @@ O projeto está sendo desenvolvido no âmbito do módulo de Projeto de Desenvolv
 *   **Python** - Lógica do servidor e intermediação de requisições.
 *   **Neon Postgres** - Banco de dados relacional em nuvem.
 
-### Inteligência Artificial & Automação
-*   **ElevenLabs API** - Processamento de Linguagem Natural (Comandos) e Text-to-Speech (Voz da Assistente).
-*   **n8n** - Automação de fluxos e integração de agentes.
+### Inteligência Artificial
+*   **ElevenLabs API** - Processamento de Linguagem Natural (Comandos).
+*   **Faster-Whisper** - Text-to-Speech (Voz da Assistente).
 
 ### Ferramentas de Gestão
 *   **Miro** - Organização de ideias, Modelagem de DER e Casos de Uso.
