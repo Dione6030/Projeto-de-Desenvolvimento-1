@@ -23,8 +23,15 @@ export const screenStyles = StyleSheet.create({
     marginTop: 6,
   },
   menuItem: {
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: 'rgba(39, 35, 31, 0.12)',
+    borderRadius: 10,
+    borderWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    padding: 18,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -33,15 +40,15 @@ export const screenStyles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 6,
     elevation: 6,
-    borderWidth: 2,
-    borderRadius: 10,
-    marginBottom: 12,
-    padding: 18,
   },
   menuItemText: {
     color: '#27231F',
     fontSize: 17,
     fontWeight: '600',
+  },
+  menuItemIcon: {
+  height: 28,
+  width: 28,
   },
   textInput: {
     backgroundColor: 'rgba(255, 255, 255, 0.94)',

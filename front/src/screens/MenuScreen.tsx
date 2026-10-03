@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import { AgendaScreen } from './AgendaScreen';
 import { ArquivoScreen } from './ArquivoScreen';
 import { ExcluidosScreen } from './ExcluidosScreen';
@@ -10,7 +10,32 @@ import { OuvirScreen } from './OuvirScreen';
 import { ScreenBackground } from './ScreenBackground';
 import { screenStyles } from './screenStyles';
 
-const menuItems = ['Falar', 'Escrever', 'Agenda', 'Arquivo', 'Excluidos', 'Notificações'];
+const menuItems = [
+  {
+    nome: 'Falar',
+    icon: require('../../assets/icone 1.png')
+  },
+  {
+    nome: 'Escrever',
+    icon: require('../../assets/icone 2.png')
+  },
+  {
+    nome: 'Agenda',
+    icon: require('../../assets/icone 3.png')
+  },
+  {
+    nome: 'Arquivo',
+    icon: require('../../assets/icone 4.png')
+  },
+  {
+    nome: 'Excluidos',
+    icon: require('../../assets/icone 5.png')
+  },
+  {
+    nome: 'Notificações',
+    icon: require('../../assets/icone 6.png')
+  }
+];
 
 type OuvirScreenProps = {
   onBack: () => void;
@@ -39,8 +64,18 @@ export function MenuScreen({ token, onLogout }: MenuScreenProps) {
       <Text style={screenStyles.title}>Menu</Text>
 
       {menuItems.map((item) => (
-        <TouchableOpacity key={item} onPress={() => setSelectedScreen(item)} style={screenStyles.menuItem}>
-          <Text style={screenStyles.menuItemText}>{item}</Text>
+        <TouchableOpacity
+          key={item.nome}
+          onPress={() => setSelectedScreen(item.nome)}
+          style={screenStyles.menuItem}
+        >
+          <Text style={screenStyles.menuItemText}>{item.nome}</Text>
+
+          <Image
+            source={item.icon}
+            style={screenStyles.menuItemIcon}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       ))}
 

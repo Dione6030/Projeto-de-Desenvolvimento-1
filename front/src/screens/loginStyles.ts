@@ -126,4 +126,41 @@ export const loginStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+    aboutCard: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: 18,
+    flex: 1,
+    marginHorizontal: 24,
+    marginVertical: 50,
+    overflow: 'hidden',
+    paddingHorizontal: 22,
+    paddingTop: 24,
+  },
+
+  aboutScrollContent: {
+    paddingBottom: 18,
+  },
+
+  aboutTitle: {
+    color: '#3A3A3A',
+    fontSize: 27,
+    fontWeight: '700',
+    marginBottom: 22,
+    textAlign: 'center',
+  },
+
+  aboutSectionTitle: {
+    color: '#3A3A3A',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 10,
+    marginTop: 18,
+  },
+
+  aboutText: {
+    color: '#555555',
+    fontSize: 16,
+    lineHeight: 25,
+    marginBottom: 12,
+  },
 });

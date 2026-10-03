@@ -9,7 +9,9 @@ const upload = multer({
 
 async function transcreverAudio(audio: Express.Multer.File): Promise<string> {
     const form = new FormData()
-    form.append("arquivo", new Blob([audio.buffer], { type: audio.mimetype }), audio.originalname)
+    const audioBuffer = new ArrayBuffer(audio.buffer.byteLength)
+    new Uint8Array(audioBuffer).set(audio.buffer)
+    form.append("arquivo", new Blob([audioBuffer], { type: audio.mimetype }), audio.originalname)
 
     const resposta = await fetch(`${process.env.TRANSCRITOR_URL}/transcrever`, {
         method: "POST",

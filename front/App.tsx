@@ -4,7 +4,9 @@ import { Animated, Image, Text, View } from 'react-native';
 import { styles } from './src/style';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { Cadastrar } from './src/screens/Cadastrar';
+import { SobreDexter } from './src/screens/SobreDexter';
 import { MenuScreen } from './src/screens/MenuScreen';
+
 
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
@@ -19,7 +21,7 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-
+  const [showAbout, setShowAbout] = useState(false);
   useEffect(() => {
     Animated.timing(logoScale, {
       toValue: 0.9,
@@ -33,22 +35,39 @@ export default function App() {
 
   if (!showSplash) {
     if (!isLoggedIn) {
-      if (showRegister) {
-        return <Cadastrar 
-        onCadastrar={() => setShowRegister(false)}
-        onCancelar={() => setShowRegister(false)} />;
-      }
+if (showRegister) {
+  return (
+    <Cadastrar
+      onCadastrar={() => {
+        setShowRegister(false);
+        setShowAbout(false);
+      }}
+      onCancelar={() => {
+        setShowRegister(false);
+        setShowAbout(false);
+      }}
+    />
+  );
+}
 
-      return (
+if (showAbout) {
+  return (
+    <SobreDexter
+      onCriarConta={() => setShowRegister(true)}
+      onVoltar={() => setShowAbout(false)}
+    />
+  );
+}
 
-        <LoginScreen
-            onLogin={(novoToken) => {
-              setToken(novoToken);
-              setIsLoggedIn(true);
-            }}
-            onRegister={() => setShowRegister(true)}
-          /> 
-      );
+return (
+  <LoginScreen
+    onLogin={(novoToken) => {
+      setToken(novoToken);
+      setIsLoggedIn(true);
+    }}
+    onRegister={() => setShowAbout(true)}
+  />
+);
     }
 
     return (
@@ -79,7 +98,6 @@ export default function App() {
     </View>
   );
 }
-
 
 
 
