@@ -73,8 +73,12 @@ export function ArquivoScreen({
         try {
             await restaurarTarefa(token, agendaSelecionada.id);
 
+            setAgendas((agendasAtuais) =>
+                agendasAtuais.filter(
+                    (agenda) => agenda.id !== agendaSelecionada.id
+                )
+            );
             setAgendaSelecionada(null);
-            await carregarAgendas();
 
             Alert.alert('Sucesso', 'Agenda restaurada.');
         } catch {

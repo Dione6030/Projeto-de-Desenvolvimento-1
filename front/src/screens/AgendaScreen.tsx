@@ -16,6 +16,7 @@ import {
 type AgendaScreenProps = {
   onBack: () => void;
   token: string | null;
+  initialAgendaId?: string | null;
 };
 
 function converterPrioridade(
@@ -43,7 +44,7 @@ function converterParaISO(data: string): string | null {
   return dataConvertida.toISOString();
 }
 
-export function AgendaScreen({ onBack, token }: AgendaScreenProps) {
+export function AgendaScreen({ onBack, token, initialAgendaId }: AgendaScreenProps) {
   const [agendaSelecionada, setAgendaSelecionada] = useState<AgendaItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [agendas, setAgendas] = useState<AgendaItem[]>([]);
@@ -76,13 +77,23 @@ export function AgendaScreen({ onBack, token }: AgendaScreenProps) {
         }));
 
         setAgendas(agendasDoBanco);
+
+        if (initialAgendaId) {
+          const agendaInicial = agendasDoBanco.find(
+            (agenda) => agenda.id === initialAgendaId
+          );
+
+          if (agendaInicial) {
+            setAgendaSelecionada(agendaInicial);
+          }
+        }
       } catch {
         Alert.alert('Erro', 'Não foi possível carregar suas tarefas.');
       }
     }
 
     carregarAgendas();
-  }, [token]);
+  }, [initialAgendaId, token]);
 
   const handleAdd = () => setShowForm(true);
 

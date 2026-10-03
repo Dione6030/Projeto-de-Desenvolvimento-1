@@ -149,4 +149,27 @@ export async function transcreverAudio(token: string, uri: string) {
     }
 
     return data.texto as string;
+  
+export async function buscarNotificacoes(token: string) {
+    return apiRequest('/notificacoes', {
+        method: 'GET',
+        token,
+    });
+}
+
+export async function marcarNotificacaoComoVisualizada(
+    token: string,
+    id: string
+) {
+    return apiRequest(`/notificacoes/${id}/visualizada`, {
+        method: 'PATCH',
+        token,
+    });
+}
+
+export async function limparNotificacoes(token: string) {
+    return apiRequest('/notificacoes', {
+        method: 'DELETE',
+        token,
+    });
 }
