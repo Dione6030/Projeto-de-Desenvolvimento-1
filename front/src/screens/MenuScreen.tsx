@@ -50,7 +50,7 @@ type MenuScreenProps = {
 export function MenuScreen({ token, onLogout }: MenuScreenProps) {
   const [selectedScreen, setSelectedScreen] = useState('');
 
-  if (selectedScreen === 'Falar') return <OuvirScreen onBack={() => setSelectedScreen('')} falar={() => setSelectedScreen('')} />;
+  if (selectedScreen === 'Falar') return <OuvirScreen onBack={() => setSelectedScreen('')} token={token} />;
   if (selectedScreen === 'Escrever') return <ObservarScreen onBack={() => setSelectedScreen('')} />;
   if (selectedScreen === 'Agenda') return <AgendaScreen onBack={() => setSelectedScreen('')} token={token}/>;
   if (selectedScreen === 'Arquivo') return <ArquivoScreen onBack={() => setSelectedScreen('')} token={token}/>;
