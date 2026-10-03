@@ -1,4 +1,6 @@
-const API_URL =
+import * as FileSystem from 'expo-file-system/legacy';
+
+export const API_URL =
     process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
 type ApiOptions = RequestInit & {
@@ -125,4 +127,26 @@ export async function atualizarTarefa(
         token,
         body: JSON.stringify(tarefa),
     });
+}
+
+export async function transcreverAudio(token: string, uri: string) {
+    const resposta = await FileSystem.uploadAsync(
+        `${API_URL}/agent-chat/audio`,
+        uri,
+        {
+            httpMethod: 'POST',
+            uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+            fieldName: 'audio',
+            mimeType: 'audio/m4a',
+            headers: { Authorization: `Bearer ${token}` },
+        }
+    );
+
+    const data = JSON.parse(resposta.body);
+
+    if (resposta.status < 200 || resposta.status >= 300) {
+        throw new Error(data.erro || 'Erro ao transcrever o áudio');
+    }
+
+    return data.texto as string;
 }
