@@ -200,32 +200,6 @@ router.get("/:id", async (req: TokenInterface, res: Response) => {
     }
 })
 
-router.patch("/:id/restaurar", async (req: TokenInterface, res: Response) => {
-    const { id } = req.params
-
-    try {
-        const tarefa = await prisma.tarefa.updateMany({
-            where: {
-                id: String(id),
-                usuarioId: req.usuarioId,
-                deletadoEm: { not: null }
-            },
-            data: {
-                deletadoEm: null
-            }
-        })
-
-        if (tarefa.count === 0) {
-            res.status(404).json({ erro: "Tarefa não encontrada na lixeira ou acesso negado." })
-            return
-        }
-
-        res.status(200).json({ mensagem: "Tarefa restaurada com sucesso!" })
-    } catch (error) {
-        res.status(500).json({ erro: "Erro ao restaurar a tarefa." })
-    }
-})
-
 router.delete("/:id/definitivo", async (req: TokenInterface, res: Response) => {
     const { id } = req.params
 

@@ -49,6 +49,7 @@ model Notificacao {
   tarefaId   String
   data       DateTime @default(now())
   vencimento DateTime
+  visualizada Boolean  @default(false)
   usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   tarefa     Tarefa   @relation(fields: [tarefaId], references: [id], onDelete: Cascade)
   logs       Log[]

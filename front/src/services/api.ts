@@ -126,3 +126,27 @@ export async function atualizarTarefa(
         body: JSON.stringify(tarefa),
     });
 }
+
+export async function buscarNotificacoes(token: string) {
+    return apiRequest('/notificacoes', {
+        method: 'GET',
+        token,
+    });
+}
+
+export async function marcarNotificacaoComoVisualizada(
+    token: string,
+    id: string
+) {
+    return apiRequest(`/notificacoes/${id}/visualizada`, {
+        method: 'PATCH',
+        token,
+    });
+}
+
+export async function limparNotificacoes(token: string) {
+    return apiRequest('/notificacoes', {
+        method: 'DELETE',
+        token,
+    });
+}

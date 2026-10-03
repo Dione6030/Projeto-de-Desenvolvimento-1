@@ -54,33 +54,34 @@ cron.schedule('0 0 * * *', async () => {
   }
 })
 
-// Notificações diárias para tarefas vencendo amanhã
-cron.schedule('0 8 * * *', async () => {
+// Notificações para tarefas que vencem nos próximos 15 dias ou já estão atrasadas.
+cron.schedule('0 * * * *', async () => {
   console.log("Iniciando verificação de prazos para notificações...")
-  const amanhaInicio = new Date()
-  amanhaInicio.setDate(amanhaInicio.getDate() + 1)
-  amanhaInicio.setHours(0, 0, 0, 0)
+  const agora = new Date()
 
-  const amanhaFim = new Date(amanhaInicio)
-  amanhaFim.setHours(23, 59, 59, 999)
+  const limiteDosProximos15Dias = new Date(agora)
+  limiteDosProximos15Dias.setDate(limiteDosProximos15Dias.getDate() + 15)
 
   try {
     const tarefasVencendo = await prisma.tarefa.findMany({
       where: {
         deletadoEm: null,
+        arquivadoEm: null,
         status: { not: "CONCLUIDA" },
         prazoFim: {
-          gte: amanhaInicio,
-          lte: amanhaFim
+          not: null,
+          lte: limiteDosProximos15Dias,
         },
         notificacoes: {
-          none: {}
+          none: {
+            visualizada: false,
+          }
         }
       }
     })
 
     if (tarefasVencendo.length === 0) {
-      console.log("Nenhuma tarefa pendente vencendo amanhã.")
+      console.log("Nenhuma tarefa pendente dentro da janela de notificação.")
       return
     }
 
@@ -96,7 +97,7 @@ cron.schedule('0 8 * * *', async () => {
       )
     )
 
-    console.log(`${notificacoesCriadas.length} alertas gerados para tarefas de amanhã.`)
+    console.log(`${notificacoesCriadas.length} alertas gerados para tarefas próximas do prazo.`)
   } catch (error) {
     console.error("Erro ao gerar notificações diárias:", error)
   }
