@@ -28,6 +28,12 @@ export function AgendaDetalheScreen({
 
       <View style={styles.container}>
         <Text style={styles.title}>{agenda.titulo}</Text>
+        <Text style={[
+          styles.status,
+          getStatusPrazo(agenda.fim).style,
+        ]}>
+          {getStatusPrazo(agenda.fim).label}
+        </Text>
         <Text style={styles.label}>Data de início</Text>
         <Text style={styles.value}>{agenda.inicio || 'Não informada'}</Text>
         <Text style={styles.label}>Data final</Text>
@@ -37,31 +43,67 @@ export function AgendaDetalheScreen({
 
         {modo === 'ativa' && (
           <>
-            <Pressable style={styles.button} onPress={onEditar}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={onEditar}
+            >
               <Text style={styles.buttonText}>Alterar</Text>
             </Pressable>
-            <Pressable style={styles.archiveButton} onPress={onArquivar}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={onArquivar}
+            >
               <Text style={styles.buttonText}>Arquivar</Text>
             </Pressable>
-            <Pressable style={styles.deleteButton} onPress={onExcluir}>
-              <Text style={styles.buttonText}>Excluir</Text>
+            <Pressable
+              style={({ pressed }) => [
+                styles.deleteButton,
+                pressed && styles.deleteButtonPressed,
+              ]}
+              onPress={onExcluir}
+            >
+              <Text style={styles.deleteButtonText}>Excluir</Text>
             </Pressable>
           </>
         )}
 
         {modo === 'arquivo' && (
           <>
-            <Pressable style={styles.button} onPress={onRestaurar}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={onRestaurar}
+            >
               <Text style={styles.buttonText}>Restaurar</Text>
             </Pressable>
-            <Pressable style={styles.deleteButton} onPress={onExcluir}>
-              <Text style={styles.buttonText}>Excluir</Text>
+            <Pressable
+              style={({ pressed }) => [
+                styles.deleteButton,
+                pressed && styles.deleteButtonPressed,
+              ]}
+              onPress={onExcluir}
+            >
+              <Text style={styles.deleteButtonText}>Excluir</Text>
             </Pressable>
           </>
         )}
 
         {modo === 'excluidos' && (
-          <Pressable style={styles.button} onPress={onRestaurar}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={onRestaurar}
+          >
             <Text style={styles.buttonText}>Restaurar</Text>
           </Pressable>
         )}
@@ -72,14 +114,52 @@ export function AgendaDetalheScreen({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#FFFFFF',
+    borderColor: 'rgba(39, 35, 31, 0.10)',
+    borderRadius: 18,
+    borderWidth: 1,
+    elevation: 3,
+    marginHorizontal: 2,
     marginTop: 16,
-    padding: 18,
+    padding: 20,
+    shadowColor: '#27231F',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.10,
+    shadowRadius: 6,
   },
   title: {
     color: '#191919',
     fontSize: 22,
+    fontWeight: '700',
     marginBottom: 24,
+  },
+  status: {
+    alignSelf: 'flex-start',
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  statusOnTime: {
+    backgroundColor: '#E7F5EC',
+    color: '#237A43',
+  },
+  statusSoon: {
+    backgroundColor: '#FFF6D9',
+    color: '#8A6500',
+  },
+  statusLate: {
+    backgroundColor: '#FDE9E7',
+    color: '#B42318',
+  },
+  statusUnknown: {
+    backgroundColor: '#F2F3F5',
+    color: '#5F666D',
   },
   label: {
     color: '#555555',
@@ -87,7 +167,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   value: {
-    color: '#191919',
+    color: '#4B4B4B',
     fontSize: 16,
   },
   description: {
@@ -95,25 +175,76 @@ const styles = StyleSheet.create({
     fontSize: 15,
     minHeight: 100,
     marginTop: 4,
+    lineHeight: 22,
   },
   button: {
-    backgroundColor: '#559492',
+    alignItems: 'center',
+    backgroundColor: '#F2F3F5',
+    borderColor: '#D9DDE2',
+    borderRadius: 10,
+    borderWidth: 1,
+    justifyContent: 'center',
     marginTop: 12,
-    padding: 12,
+    minHeight: 46,
+    paddingHorizontal: 16,
   },
-  archiveButton: {
-    backgroundColor: '#D5A23A',
-    marginTop: 8,
-    padding: 12,
+  buttonPressed: {
+    backgroundColor: '#E5E7EB',
   },
   deleteButton: {
-    backgroundColor: '#D5232B',
-    marginTop: 8,
-    padding: 12,
+    alignItems: 'center',
+    backgroundColor: '#FFF1F0',
+    borderColor: '#E7A8A3',
+    borderRadius: 10,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: 12,
+    minHeight: 46,
+    paddingHorizontal: 16,
+  },
+  deleteButtonPressed: {
+    backgroundColor: '#FADBD8',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#3E444B',
     fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  deleteButtonText: {
+    color: '#B42318',
+    fontSize: 14,
+    fontWeight: '700',
     textAlign: 'center',
   },
 });
+
+function getStatusPrazo(data: string): {
+  label: string;
+  style: typeof styles.statusOnTime;
+} {
+  if (!data) {
+    return { label: 'Prazo não informado', style: styles.statusUnknown };
+  }
+
+  const [dia, mes, ano] = data.split('/').map(Number);
+  const prazo = new Date(ano, mes - 1, dia);
+  prazo.setHours(23, 59, 59, 999);
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  const diferencaEmDias = Math.ceil(
+    (prazo.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  if (diferencaEmDias < 0) {
+    return { label: 'Em atraso', style: styles.statusLate };
+  }
+
+  if (diferencaEmDias <= 7) {
+    return { label: 'Prazo próximo', style: styles.statusSoon };
+  }
+
+  return { label: 'Em dia', style: styles.statusOnTime };
+}

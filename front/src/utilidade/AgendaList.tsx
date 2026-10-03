@@ -7,9 +7,19 @@ type AgendaListProps = {
 };
 
 export function AgendaList({ agendas, onDetails }: AgendaListProps) {
+    const ordemPrioridade ={
+        urgente: 0,
+        importante: 1,
+        media: 2,
+    } as const;
+
+    const agendasOrdenadas = [...agendas].sort ((a, b) => 
+        ordemPrioridade[a.prioridade] - ordemPrioridade[b.prioridade]
+    );
+
     return (
         <ScrollView contentContainerStyle={styles.list}>
-        {agendas.map((item, index) => {
+        {agendasOrdenadas.map((item) => {
             const color = item.prioridade === 'urgente'
                 ? '#F51B25'
                 : item.prioridade === 'importante'
@@ -24,12 +34,15 @@ export function AgendaList({ agendas, onDetails }: AgendaListProps) {
                         <Text style={styles.date}>Data de Início: {item.inicio}</Text>
                         <Text style={styles.date}>Data Final: <Text style={styles.dateValue}>{item.fim}</Text></Text>
                     </View>
-                        <Pressable
-                            style={[styles.detailsButton, { backgroundColor: color }]}
-                            onPress={() => onDetails(item)}
-                        >
-                            <Text style={styles.detailsButtonText}>Detalhes</Text>
-                        </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.detailsButton,
+                            pressed && styles.detailsButtonPressed,
+                        ]}
+                        onPress={() => onDetails(item)}
+                    >
+                        <Text style={styles.detailsButtonText}>Detalhes</Text>
+                    </Pressable>
                 </View>
             );
         })}
@@ -43,41 +56,65 @@ const styles = StyleSheet.create({
         paddingTop: 16,
     },
     card: {
-        backgroundColor: '#D9D9D9',
+        backgroundColor: '#EEF0F2',
+        borderColor: 'rgba(39, 35, 31, 0.10)',
+        borderRadius: 16,
+        borderWidth: 1,
+        elevation: 3,
         flexDirection: 'row',
-        height: 76,
-        marginBottom: 7,
+        marginBottom: 12,
+        minHeight: 86,
         overflow: 'hidden',
+        shadowColor: '#27231F',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.10,
+        shadowRadius: 5,
     },
     priorityStripe: {
-        width: 9,
+        width: 6,
     },
     details: {
         flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 9,
+        paddingHorizontal: 14,
+        paddingVertical: 13,
     },
     title: {
         color: '#191919',
-        fontSize: 12,
-        marginBottom: 5,
+        fontSize: 15,
+        fontWeight: '700',
+        marginBottom: 7,
     },
     date: {
-        color: '#191919',
-        fontSize: 8,
-        lineHeight: 12,
+        color: '#6B6B6B',
+        fontSize: 11,
+        lineHeight: 17,
     },
     dateValue: {
-        color: '#D5232B',
+        color: '#3E3E3E',
+        fontWeight: '600',
     },
     detailsButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 51,
+        alignSelf: 'center',
+        backgroundColor: '#F2F3F5',
+        borderColor: '#D9DDE2',
+        borderRadius: 10,
+        borderWidth: 1,
+        marginRight: 12,
+        minHeight: 38,
+        paddingHorizontal: 11,
     },
     detailsButtonText: {
-        color: '#FFFFFF',
-        fontFamily: 'serif',
-        fontSize: 10,
+        color: '#3E444B',
+        fontSize: 11,
+        fontWeight: '700',
+    },
+    detailsButtonPressed: {
+        backgroundColor: '#E5E7EB',
     },
 });

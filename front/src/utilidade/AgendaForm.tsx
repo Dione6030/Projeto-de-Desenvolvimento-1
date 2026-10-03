@@ -63,19 +63,27 @@ export function AgendaForm({ initialAgenda, onConfirm, onCancel }: AgendaFormPro
     
     return (
         <View style={styles.form}>
-        <TextInput style={styles.input} placeholder="Título" value={titulo} onChangeText={setTitulo} />
+        <Text style={styles.formHeading}>{initialAgenda ? 'Alterar agenda' : 'Nova agenda'}</Text>
+        <Text style={styles.fieldLabel}>Título</Text>
+        <TextInput style={styles.input} placeholder="Digite o título da agenda" value={titulo} onChangeText={setTitulo} />
         <View style={styles.dateRow}>
+            <View style={styles.dateField}>
+            <Text style={styles.fieldLabel}>Início</Text>
             <Pressable style={[styles.input, styles.dateInput]} onPress={() => abrirCalendario('inicio')}>
                 <TextInput pointerEvents="none" style={styles.dateText} placeholder="Data - início" value={inicio} editable={false} />
             </Pressable>
+            </View>
+            <View style={styles.dateField}>
+            <Text style={styles.fieldLabel}>Término</Text>
             <Pressable style={[styles.input, styles.dateInput]} onPress={() => abrirCalendario('fim')}>
                 <TextInput pointerEvents="none" style={styles.dateText} placeholder="Data - final" value={fim} editable={false} />
             </Pressable>
+            </View>
         </View>
         {dataSelecionada && <DateTimePicker value={dataDoCalendario} mode="date" onChange={selecionarData} />}
-        <Text style={styles.label}>Obs:</Text>
+        <Text style={styles.fieldLabel}>Observações</Text>
         <TextInput
-            style={[styles.input, { height: Math.max(100, obsHeight) }]}
+            style={[styles.input, styles.observation, { height: Math.max(100, obsHeight) }]}
             multiline
             value={obs}
             onChangeText={setObs}
@@ -84,6 +92,7 @@ export function AgendaForm({ initialAgenda, onConfirm, onCancel }: AgendaFormPro
             }}
         />
 
+        <Text style={styles.fieldLabel}>Prioridade</Text>
         <View style={styles.prioridade}>
             <PriorityButton label="Urgente" color="#F51B25" selected={prioridade === 'urgente'} onPress={() => setPrioridade('urgente')} />
             <PriorityButton label="Importante" color="#E2C000" selected={prioridade === 'importante'} onPress={() => setPrioridade('importante')} />
@@ -92,7 +101,7 @@ export function AgendaForm({ initialAgenda, onConfirm, onCancel }: AgendaFormPro
 
         <View style={styles.actions}>
             <Pressable style={styles.cancelButton} onPress={onCancel}>
-                <Text style={styles.cancelText}>Limpar</Text>
+                <Text style={styles.cancelText}>Cancelar</Text>
             </Pressable>
             <Pressable style={styles.confirmButton} onPress={confirmar}>
                 <Text style={styles.confirmText}>Confirmar</Text>
@@ -120,53 +129,79 @@ function PriorityButton({ label, color, selected, onPress }: PriorityButtonProps
 
 const styles = StyleSheet.create({
     form: {
-        backgroundColor: '#D9D9D9',
+        backgroundColor: '#FFFFFF',
+        borderColor: 'rgba(39, 35, 31, 0.10)',
+        borderRadius: 18,
+        borderWidth: 1,
+        elevation: 3,
         marginTop: 16,
-        padding: 18,
+        padding: 20,
+        shadowColor: '#27231F',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.10,
+        shadowRadius: 6,
+    },
+    formHeading: {
+        color: '#27231F',
+        fontSize: 21,
+        fontWeight: '700',
+        marginBottom: 20,
+    },
+    fieldLabel: {
+        color: '#555B61',
+        fontSize: 12,
+        fontWeight: '700',
+        marginBottom: 6,
     },
     input: {
-        backgroundColor: '#F1F1F5',
+        backgroundColor: '#F5F6F7',
+        borderColor: '#D9DDE2',
+        borderRadius: 10,
+        borderWidth: 1,
         color: '#222222',
         fontSize: 14,
-        height: 40,
+        height: 48,
         marginBottom: 12,
-        paddingHorizontal: 5,
+        paddingHorizontal: 13,
     },
     dateRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
+    dateField: {
+        width: '48%',
+    },
     dateInput: {
-        width: '43%',
+        width: '100%',
     },
     dateText: {
         color: '#222222',
         flex: 1,
         fontSize: 14,
-        height: 40,
+        height: 46,
         paddingHorizontal: 0,
     },
-    label: {
-        color: '#222222',
-        fontSize: 10,
-        marginBottom: 4,
-    },
     observation: {
-        height: 97,
         textAlignVertical: 'top',
     },
     prioridade: {
+        backgroundColor: '#F5F6F7',
+        borderColor: '#D9DDE2',
+        borderRadius: 10,
+        borderWidth: 1,
         marginBottom: 22,
+        padding: 10,
     },
     priorityOption: {
         alignItems: 'center',
         flexDirection: 'row',
-        height: 25,
+        height: 34,
     },
     swatch: {
-        height: 8,
-        marginRight: 4,
-        width: 8,
+        borderRadius: 5,
+        height: 10,
+        marginRight: 8,
+        width: 10,
     },
     selectedSwatch: {
         borderColor: '#222222',
@@ -174,33 +209,39 @@ const styles = StyleSheet.create({
     },
     priorityText: {
         color: '#222222',
-        fontSize: 15,
+        fontSize: 14,
     },
     actions: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        gap: 12,
     },
     cancelButton: {
         alignItems: 'center',
-        backgroundColor: '#EEEEEE',
+        backgroundColor: '#F2F3F5',
+        borderColor: '#D9DDE2',
+        borderRadius: 10,
+        borderWidth: 1,
         justifyContent: 'center',
-        paddingHorizontal: 18,
-        paddingVertical: 5,
+        minHeight: 46,
+        paddingHorizontal: 20,
     },
     cancelText: {
         color: '#222222',
-        fontSize: 9,
+        fontSize: 13,
+        fontWeight: '700',
     },
     confirmButton: {
         alignItems: 'center',
-        backgroundColor: '#559492',
+        backgroundColor: '#3F7774',
+        borderRadius: 10,
         justifyContent: 'center',
-        paddingHorizontal: 18,
-        paddingVertical: 5,
+        minHeight: 46,
+        paddingHorizontal: 20,
     },
     confirmText: {
         color: '#FFFFFF',
-        fontSize: 9,
+        fontSize: 13,
+        fontWeight: '700',
     },
 });
 
