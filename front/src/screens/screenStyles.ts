@@ -14,7 +14,7 @@ export const screenStyles = StyleSheet.create({
     color: '#27231F',
     fontSize: 34,
     fontWeight: '700',
-    marginBottom: 65,
+    marginBottom: 40,
   },
   subtitle: {
     color: '#68615A',
@@ -75,25 +75,61 @@ export const screenStyles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '700',
   },
-  textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.94)',
-    borderColor: 'rgba(39, 35, 31, 0.22)',
-    borderRadius: 10,
-    borderWidth: 1,
-    color: '#27231F',
-    fontSize: 16,
-    maxHeight: 120,
-    minHeight: 52,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
+
+  // Estilo para o botão de enviar
   messageContainer: {
-    flex: 1,
+    position: 'absolute',
+    bottom: 80,
+    left: 10,
+    right: 10,
+    flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingBottom: 45,
-    paddingHorizontal: 5,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 8,
+    padding: 8,
+    margin: 10,
+  },
+  textInput: {
+    flex: 1,
+    maxHeight: 120,
+    paddingTop: 4,
+    color: '#000',
   },
   keyboardContainer: {
-  flex: 1,
+    flex: 1,
+  },
+  areaMensagens: {
+    flex: 1,
+    padding: 10,
+  },
+  bolhaMensagem: {
+    alignSelf: 'flex-end',
+    maxWidth: '80%',
+    backgroundColor: '#222',
+    borderRadius: 16,
+    padding: 12,
+    marginVertical: 4,
+  },
+  textoMensagem: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+
+  sendButton: {
+
+    width: 44, 
+    height: 44,
+    backgroundColor: '#222', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 22, 
+    marginLeft: 8,
+  },
+  sendButtonImage: {
+    width: 24,
+    height: 24,
+    tintColor: '#FFFFFF', 
   },
 });

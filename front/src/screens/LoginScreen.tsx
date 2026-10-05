@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
-import { useEffect, useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, Easing, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { loginStyles } from './loginStyles';
 import { fazerLogin } from '../services/api';
 
@@ -16,8 +16,19 @@ export function LoginScreen({ onLogin, onRegister }: LoginScreenProps) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberLogin, setRememberLogin] = useState(false);
+  const rotacao = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    const animacaoOrbita = Animated.loop(
+      Animated.timing(rotacao, {
+        toValue: 1,
+        duration: 3000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    animacaoOrbita.start();
+
     async function loadSavedLogin() {
       const savedEmail = await SecureStore.getItemAsync('dexter_login_email');
       const savedPassword = await SecureStore.getItemAsync('dexter_login_password');
@@ -30,7 +41,8 @@ export function LoginScreen({ onLogin, onRegister }: LoginScreenProps) {
     }
 
     loadSavedLogin();
-  }, []);
+    return () => animacaoOrbita.stop();
+  }, [rotacao]);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -81,7 +93,33 @@ export function LoginScreen({ onLogin, onRegister }: LoginScreenProps) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Image source={require('../../assets/logoBranco - Copia.png')} style={loginStyles.logo} resizeMode="contain" />
+        <View style={loginStyles.logoContainer}>
+          <View style={loginStyles.orbita} />
+
+          <Animated.View
+            style={[
+              loginStyles.pontoOrbitaContainer,
+              {
+                transform: [
+                  {
+                    rotate: rotacao.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '360deg'],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <View style={loginStyles.pontoOrbita} />
+          </Animated.View>
+
+          <Image
+            source={require('../../assets/logoBranco - Copia.png')}
+            style={loginStyles.logo}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={loginStyles.heading}>Entrar</Text>
         <Text style={loginStyles.subtitle}>Acesse sua conta Dexter</Text>
 

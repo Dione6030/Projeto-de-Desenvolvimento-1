@@ -18,8 +18,37 @@ export const loginStyles = StyleSheet.create({
   logo: {
     alignSelf: 'center',
     height: 120,
-    marginBottom: 18,
     width: 190,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    height: 150,
+    justifyContent: 'center',
+    marginBottom: 18,
+    position: 'relative',
+    width: 210,
+  },
+  orbita: {
+    borderColor: '#D5A23A',
+    borderRadius: 68,
+    borderWidth: 2,
+    height: 136,
+    position: 'absolute',
+    width: 136,
+  },
+  pontoOrbitaContainer: {
+    alignItems: 'center',
+    height: 136,
+    justifyContent: 'flex-start',
+    position: 'absolute',
+    width: 136,
+  },
+  pontoOrbita: {
+    backgroundColor: '#D5A23A',
+    borderRadius: 6,
+    height: 12,
+    width: 12,
   },
   heading: {
     color: '#FFFFFF',

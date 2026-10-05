@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Image, Text, View } from 'react-native';
+import { Animated, Easing, Image, Text, View } from 'react-native';
 import { styles } from './src/style';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { Cadastrar } from './src/screens/Cadastrar';
@@ -22,7 +22,18 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const rotacao = useRef(new Animated.Value(0)).current;
   useEffect(() => {
+    const animacaoOrbita = Animated.loop(
+      Animated.timing(rotacao, {
+        toValue: 1,
+        duration: 3000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    animacaoOrbita.start();
+
     Animated.timing(logoScale, {
       toValue: 0.9,
       duration: 2000,
@@ -30,8 +41,11 @@ export default function App() {
     }).start();
 
     const splashTimer = setTimeout(() => setShowSplash(false), 2000);
-    return () => clearTimeout(splashTimer);
-  }, [logoScale]);
+    return () => {
+      clearTimeout(splashTimer);
+      animacaoOrbita.stop();
+    };
+  }, [logoScale, rotacao]);
 
   if (!showSplash) {
     if (!isLoggedIn) {
@@ -87,10 +101,40 @@ return (
 
       <View style={styles.content}>
         <Animated.View
-          style={[styles.logoWrapper, { transform: [{ scale: logoScale }] }]}
+          style={[
+            styles.logoWrapper,
+            { transform: [{ scale: logoScale }] },
+          ]}
         >
-          <Image source={logoImage} style={styles.logo} resizeMode="contain" />
+          <View style={styles.logoContainer}>
+            <View style={styles.orbita} />
+
+            <Animated.View
+              style={[
+                styles.pontoOrbitaContainer,
+                {
+                  transform: [
+                    {
+                      rotate: rotacao.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0deg', '360deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={styles.pontoOrbita} />
+            </Animated.View>
+
+            <Image
+              source={logoImage}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
         </Animated.View>
+
         <Text style={styles.title}>Dexter</Text>
       </View>
 
@@ -98,6 +142,5 @@ return (
     </View>
   );
 }
-
 
 

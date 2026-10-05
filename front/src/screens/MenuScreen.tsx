@@ -123,7 +123,7 @@ export function MenuScreen({ token, onLogout }: MenuScreenProps) {
         </TouchableOpacity>
       ))}
 
-      <TouchableOpacity onPress={onLogout} style={[screenStyles.menuItem, { marginTop: 55, backgroundColor: '#D5A23A' }]}>
+      <TouchableOpacity onPress={onLogout} style={[screenStyles.menuItem, { marginTop: 35, backgroundColor: '#D5A23A' }]}>
         <Text style={screenStyles.menuItemText}>Sair</Text>
       </TouchableOpacity>
     </ScreenBackground>

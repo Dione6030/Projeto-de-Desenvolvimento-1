@@ -149,7 +149,8 @@ export async function transcreverAudio(token: string, uri: string) {
     }
 
     return data.texto as string;
-  
+}
+
 export async function buscarNotificacoes(token: string) {
     return apiRequest('/notificacoes', {
         method: 'GET',

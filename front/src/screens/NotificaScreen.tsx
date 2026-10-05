@@ -103,10 +103,58 @@ export function NotificaScreen({
     <ScreenBackground>
       <MenuBar onBack={onBack} title="Notificações" />
 
-      <View style={styles.header}>
-        <Text style={styles.subtitle}>
-         
-        </Text>
+      <View style={styles.content}>
+        <ScrollView
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+        >
+          {!carregando && notificacoes.length === 0 && (
+            <Text style={styles.emptyText}>
+              Você não possui notificações no momento.
+            </Text>
+          )}
+
+          {notificacoes.map((notificacao) => {
+            const status = calcularStatusPrazo(notificacao.vencimento);
+
+            return (
+              <View
+                key={notificacao.id}
+                style={[
+                  styles.card,
+                  { borderLeftColor: status.cor },
+                ]}
+              >
+                <View style={styles.cardContent}>
+                  <Text style={styles.cardTitle} numberOfLines={2}>
+                    {notificacao.tarefa.titulo}
+                  </Text>
+                  <View
+                    style={[
+                      styles.status,
+                      { backgroundColor: status.fundo },
+                    ]}
+                  >
+                    <Text style={[styles.statusText, { color: status.cor }]}>
+                      {status.texto}
+                    </Text>
+                  </View>
+                </View>
+
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.detailsButton,
+                    pressed && styles.detailsButtonPressed,
+                  ]}
+                  onPress={() => abrirDetalhes(notificacao)}
+                >
+                  <Text style={styles.detailsButtonText}>Detalhes</Text>
+                </Pressable>
+              </View>
+            );
+          })}
+        </ScrollView>
+
         {notificacoes.length > 0 && (
           <Pressable
             style={({ pressed }) => [
@@ -119,54 +167,6 @@ export function NotificaScreen({
           </Pressable>
         )}
       </View>
-
-      <ScrollView contentContainerStyle={styles.list}>
-        {!carregando && notificacoes.length === 0 && (
-          <Text style={styles.emptyText}>
-            Você não possui notificações no momento.
-          </Text>
-        )}
-
-        {notificacoes.map((notificacao) => {
-          const status = calcularStatusPrazo(notificacao.vencimento);
-
-          return (
-            <View
-              key={notificacao.id}
-              style={[
-                styles.card,
-                { borderLeftColor: status.cor },
-              ]}
-            >
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle} numberOfLines={2}>
-                  {notificacao.tarefa.titulo}
-                </Text>
-                <View
-                  style={[
-                    styles.status,
-                    { backgroundColor: status.fundo },
-                  ]}
-                >
-                  <Text style={[styles.statusText, { color: status.cor }]}>
-                    {status.texto}
-                  </Text>
-                </View>
-              </View>
-
-              <Pressable
-                style={({ pressed }) => [
-                  styles.detailsButton,
-                  pressed && styles.detailsButtonPressed,
-                ]}
-                onPress={() => abrirDetalhes(notificacao)}
-              >
-                <Text style={styles.detailsButtonText}>Detalhes</Text>
-              </Pressable>
-            </View>
-          );
-        })}
-      </ScrollView>
     </ScreenBackground>
   );
 }
@@ -184,7 +184,9 @@ function calcularStatusPrazo(data: string): StatusPrazo {
 
   if (dias <= 0) {
     return {
-      texto: 'Em atraso',
+      texto: dias === 0
+        ? 'Em atraso'
+        : `Atrasada há ${Math.abs(dias)} ${Math.abs(dias) === 1 ? 'dia' : 'dias'}`,
       cor: '#B42318',
       fundo: '#FDE9E7',
     };
@@ -192,57 +194,47 @@ function calcularStatusPrazo(data: string): StatusPrazo {
 
   if (dias < 7) {
     return {
-      texto: 'Prazo próximo do limite',
+      texto: `Faltam ${dias} ${dias === 1 ? 'dia' : 'dias'}`,
       cor: '#8A6500',
       fundo: '#FFF6D9',
     };
   }
 
   return {
-    texto: `Faltam ${dias} dias para o prazo`,
+    texto: `Faltam ${dias} ${dias === 1 ? 'dia' : 'dias'}`,
     cor: '#237A43',
     fundo: '#E7F5EC',
   };
 }
 
 const styles = StyleSheet.create({
-  header: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 18,
-    paddingHorizontal: 2,
-  },
-  subtitle: {
-    color: '#555B61',
+  content: {
     flex: 1,
-    fontSize: 15,
-    lineHeight: 21,
-    marginRight: 16,
-    paddingTop: 5,
+    paddingHorizontal: 16,
   },
   clearButton: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#C9CED4',
+    alignItems: 'center',
+    backgroundColor: '#D5A23A',
     borderRadius: 11,
-    borderWidth: 1,
-    paddingHorizontal: 13,
-    paddingVertical: 10,
+    marginBottom: 28,
+    marginTop: 10,
+    paddingVertical: 13,
   },
   clearButtonPressed: {
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#B98A2B',
   },
   clearButtonText: {
-    color: '#3E444B',
-    fontSize: 12,
+    color: '#2B2520',
+    fontSize: 14,
     fontWeight: '700',
   },
   list: {
-    paddingBottom: 24,
+    paddingBottom: 8,
+    paddingTop: 14,
   },
   card: {
     alignItems: 'center',
-    backgroundColor: '#F1F2F4',
+    backgroundColor: '#FFFFFF',
     borderBottomRightRadius: 14,
     borderColor: 'rgba(39, 35, 31, 0.10)',
     borderLeftWidth: 6,
@@ -251,9 +243,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     elevation: 2,
     flexDirection: 'row',
-    marginBottom: 14,
-    minHeight: 106,
-    paddingHorizontal: 16,
+    marginBottom: 12,
+    minHeight: 100,
+    paddingHorizontal: 14,
     shadowColor: '#27231F',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -261,27 +253,27 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
-    paddingVertical: 16,
+    paddingVertical: 14,
   },
   cardTitle: {
     color: '#27231F',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
-    marginBottom: 11,
+    marginBottom: 9,
   },
   status: {
     alignSelf: 'flex-start',
-    borderRadius: 7,
+    borderRadius: 8,
     paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingVertical: 6,
   },
   statusText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
   },
   detailsButton: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D9DDE2',
+    backgroundColor: '#F7F8F9',
+    borderColor: '#C9CED4',
     borderRadius: 11,
     borderWidth: 1,
     marginLeft: 10,
